@@ -11,20 +11,41 @@
 * Optional: Use the `node node/app.js` command to test the function locally in Node.js.
 * Upload the `pkg/*.wasm` file to the [Second State FaaS service](https://www.secondstate.io/articles/getting-started-with-function-as-a-service-in-rust/), OR to a [Node.js server](https://www.secondstate.io/articles/getting-started-with-rust-function/), to turn it into a web service.
 
-This is the Docker edition. Check out the [Github Codespaces edition here](README-Codespaces.md).
+## Setup
 
-## Docker
-
-Build the WebAssembly module.
+It is easy to use our `appdev` Docker image to run the dev environment. You can choose from `x86_64` or `aarch64` versions of the image. Alternatively, you could also use Github Codespaces to run the following example.
 
 ```
-$ docker pull secondstate/wasmedge-nodejs-starter
-$ docker run -p 3000:3000 --rm -it -v $(pwd):/app secondstate/wasmedge-nodejs-starter
+$ docker pull wasmedge/appdev_x86_64
+$ docker run -p 3000:3000 --rm -it -v $(pwd):/app wasmedge/appdev_x86_64
+(docker) #
+```
+
+## Build
+
+Use the `rustwasmc` command to build the Rust function into a WebAssembly bytecode file.
+
+```
 (docker) # cd /app
 (docker) # rustwasmc build
 ```
 
-### Option 1: Upload to the FaaS and test
+## Test and debug
+
+From the first terminal window, start the Node.js application.
+
+```
+(docker) # node node/app.js
+```
+
+From a second terminal window, you can test the local server.
+
+```
+$ curl http://localhost:3000/?name=WasmEdge
+hello WasmEdge
+```
+
+### Optional: Upload to the FaaS and test
 
 Upload the wasm file in the pkg folder to the FaaS. Double check the .wasm file name before you upload.
 
@@ -52,21 +73,6 @@ hello Second State FaaS
 
 You can easily incorporate this web service into your HTML web pages. [See how](https://www.secondstate.io/articles/getting-started-with-function-as-a-service-in-rust/#web-ui)
 
-### Option 2: Local test and debug
-
-From the first terminal window, start the Node.js application.
-
-```
-(docker) # node node/app.js
-```
-
-From a second terminal window, you can test the local server.
-
-```
-$ curl http://localhost:3000/?name=WasmEdge
-hello WasmEdge
-```
-
 ## More exercises
 
 Now, you can copy and paste code from [this project](https://github.com/second-state/wasm-learning/tree/master/nodejs/functions).
@@ -90,7 +96,6 @@ Now, you can copy and paste code from [this project](https://github.com/second-s
   * [The Case for WebAssembly on the Server-side](https://www.secondstate.io/articles/why-webassembly-server/)
   * [Getting started on Rust and WebAssembly for server-side apps](https://www.secondstate.io/articles/getting-started-with-rust-function/)
   * [Passing function arguments in JSON](https://www.secondstate.io/articles/rust-functions-in-nodejs/)
-  * [Access operating system resources from WebAssembly (WASI)](https://www.secondstate.io/articles/wasi-access-system-resources/)
   * [Use Tensorflow and AI models from WebAssembly](https://www.secondstate.io/articles/face-detection-ai-as-a-service/)
 
 ## Resources
