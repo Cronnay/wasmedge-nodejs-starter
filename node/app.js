@@ -1,19 +1,18 @@
-const { say } = require('../pkg/wasmedge_nodejs_starter_lib.js');
-
-const http = require('http');
-const url = require('url');
-const hostname = '0.0.0.0';
+const { say } = require('../pkg/my_rust_code.js');
+const express = require('express');
 const port = 3000;
 
-const server = http.createServer((req, res) => {
-  const queryObject = url.parse(req.url,true).query;
-  if (!queryObject['name']) {
-    res.end(`Please use command curl http://${hostname}:${port}/?name=MyName \n`);
-  } else {
-    res.end(say(queryObject['name']) + '\n');
+const app = express();
+
+app.get("/", (req, res) => {
+  const { name } = req.query;
+  if (!name) {
+    return res.send("No name has been passed")
   }
+
+  return res.send(say(name));
 });
 
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
+app.listen(port, () => {
+  console.log("Server started on port " + port);
 });
